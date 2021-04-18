@@ -54,7 +54,7 @@ def search(query, min_rating=1.0, level=None, num_results=10):
 
 	for i in sorted_docs:
 		name = coursera_course_names[i]
-		if (coursera_courses[name]["course_rating"] == "None" or float(coursera_courses[name]["course_rating"]) >= min_rating) and (coursera_courses[name]["course_level"] == "None" or coursera_courses[name]["course_level"] == level):
+		if (coursera_courses[name]["course_rating"] == "None" or float(coursera_courses[name]["course_rating"]) >= min_rating) and (coursera_courses[name]["course_level"] == "None" or level == None or coursera_courses[name]["course_level"] == level):
 			results.append(coursera_courses[name])
 			num_results -= 1
 		if num_results == 0:
