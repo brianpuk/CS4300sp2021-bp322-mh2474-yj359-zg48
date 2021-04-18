@@ -27,8 +27,6 @@ tfidf_vectorizer = None
 
 def initialize():
 	global coursera_data,coursera_courses,coursera_course_names,coursera_docs,tfidf,tfidf_vectorizer
-	print(coursera_docs)
-
 
 	with open('../coursera_data.csv') as f:
 		coursera_data = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
