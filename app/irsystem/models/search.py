@@ -8,7 +8,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer,strip_accents_unicod
 from sklearn.metrics.pairwise import cosine_similarity
 from operator import itemgetter
 
-stopwords = stopwords.words('english')
+file1 = open('stopwords_eng.txt','r')
+
+stopwords = file.read().splitlines()
+#stopwords.words('english')
+
+
 
 class LemmaTokenizer(object):
     def __init__(self):
