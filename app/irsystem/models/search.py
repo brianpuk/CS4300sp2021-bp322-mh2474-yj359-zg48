@@ -3,14 +3,14 @@ from nltk.tokenize import TreebankWordTokenizer
 import numpy as np
 from nltk import word_tokenize          
 from nltk.stem import WordNetLemmatizer 
-from nltk.corpus import stopwords
+#from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer,strip_accents_unicode
 from sklearn.metrics.pairwise import cosine_similarity
 from operator import itemgetter
 
 file1 = open('stopwords_eng.txt','r')
 
-stopwords = file.read().splitlines()
+stopwords = file1.read().splitlines()
 #stopwords.words('english')
 
 
