@@ -28,7 +28,7 @@ tfidf_vectorizer = None
 def initialize():
 	global coursera_data,coursera_courses,coursera_course_names,coursera_docs,tfidf,tfidf_vectorizer
 
-	with open('../coursera_data.csv') as f:
+	with open('coursera_data.csv') as f:
 		coursera_data = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
 
 	index = 0
@@ -44,7 +44,7 @@ def initialize():
 
 	tfidf = tfidf_vectorizer.fit_transform([i.lower() for i in coursera_course_names]).toarray()
 
-def search(query, min_rating=1.0, level=None, num_results=10):
+def find_courses(query, min_rating=1.0, level=None, num_results=10):
 	a = tfidf_vectorizer.build_analyzer()
 	query_tfidf = tfidf_vectorizer.transform([query])
 	cosineSimilarities = cosine_similarity(query_tfidf, tfidf).flatten()

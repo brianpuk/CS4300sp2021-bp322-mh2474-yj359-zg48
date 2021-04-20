@@ -1,9 +1,12 @@
 from . import *  
 from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
+from app.irsystem.models.search import *
 
-project_name = "best course helper"
-net_id = "Brian Pukmel bp322, Ziwei Gu zw48, Yue Ji yj359, Matthew Hall-Pena mh2474"
+project_name = "Online Course Recommender"
+net_id = "Brian Pukmel bp322, Ziwei Gu zg48, Matthew Hall-Pena mh2474"
+
+initialize()
 
 @irsystem.route('/', methods=['GET'])
 def search():
@@ -12,8 +15,8 @@ def search():
 		data = []
 		output_message = ''
 	else:
-		output_message = "Your search: " + query
-		data = range(5)
+		output_message = "Recommended courses for query \"" + query + "\""
+		data = find_courses(query)
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 
