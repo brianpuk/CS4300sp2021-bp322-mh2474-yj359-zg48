@@ -32,10 +32,10 @@ tfidf_vectorizer_tags = None
 def initialize():
 	global courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
 
+	data = []
 	with open('../../../udemy_coursera_edx.csv') as f:
 		data = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
 
-	data = []
 	index = 0
 	sentiment = SentimentIntensityAnalyzer()
 
@@ -75,7 +75,6 @@ def initialize():
 				current = float(courses[i["course_name"]]["course_enrollments"])
 			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
 
-		i.clear()
 	data = []
 
 
@@ -147,3 +146,5 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 				break
 
 	return results
+
+initialize()
