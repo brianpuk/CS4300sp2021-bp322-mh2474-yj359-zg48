@@ -102,7 +102,7 @@ def proccess(start):
 		else:
 			current = 0
 			if courses[i["course_name"]]["course_enrollments"] != "":
-				current = np.float32(courses[i["course_name"]]["course_enrollments"])
+				current = float(courses[i["course_name"]]["course_enrollments"])
 			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
 	data = []
 	return index
@@ -135,7 +135,7 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 
 	for i in range(len(course_names)):
 		if courses[course_names[i]]["course_rating"] != "none" and courses[course_names[i]]["course_rating"] != "":
-			scores[i] *= np.float32(courses[course_names[i]]["course_rating"])
+			scores[i] *= float(courses[course_names[i]]["course_rating"])
 		else:
 			scores[i] *= 4 #Placeholder
 
@@ -149,7 +149,7 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 		if num_results <= 0:
 			if scores[i] < .8 * best_score: #Placeholder
 				break
-		if (courses[name]["course_rating"] == "none" or courses[name]["course_rating"] == "" or np.float32(courses[name]["course_rating"]) >= min_rating) and (courses[name]["course_level"] == "none" or courses[name]["course_level"] == "" or level == None or courses[name]["course_level"] == level) and (courses[name]["price"] == "" or max_price == None or np.float32(courses[name]["price"])  <= max_price):
+		if (courses[name]["course_rating"] == "none" or courses[name]["course_rating"] == "" or float(courses[name]["course_rating"]) >= min_rating) and (courses[name]["course_level"] == "none" or courses[name]["course_level"] == "" or level == None or courses[name]["course_level"] == level) and (courses[name]["price"] == "" or max_price == None or float(courses[name]["price"])  <= max_price):
 			results.append(courses[name])
 			num_results -= 1
 
@@ -158,11 +158,11 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 		for i in results:
 			if i["course_enrollments"] == "":
 				i["course_enrollments"] = "0"
-			if min_enrollment == -1 or np.float32(i["course_enrollments"]) < min_enrollment:
-				min_enrollment = np.float32(i["course_enrollments"])
+			if min_enrollment == -1 or float(i["course_enrollments"]) < min_enrollment:
+				min_enrollment = float(i["course_enrollments"])
 
 		for i in reversed(range(len(results))):
-			if np.float32(results[i]["course_enrollments"]) == min_enrollment:
+			if float(results[i]["course_enrollments"]) == min_enrollment:
 				del results[i]
 				num_results += 1
 				break
