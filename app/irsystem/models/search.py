@@ -48,7 +48,7 @@ def initialize(length,pieces):
 			index += 1
 		proccess(start)
 
-	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.05,min_df = 20,use_idf=True)
+	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
 	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
 
 	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
@@ -169,4 +169,14 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 
 	return results
 
-initialize(114579,3)
+
+'''from memory_profiler import memory_usage
+
+def myfunc():
+  # code
+  return
+
+mem = max(memory_usage(proc=myfunc))
+
+print("Maximum memory used: {} MiB".format(mem))
+initialize(114579,3)'''
