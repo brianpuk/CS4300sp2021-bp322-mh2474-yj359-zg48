@@ -13,9 +13,16 @@
                 color: navy;
             }
 
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 50%;
+              }
+
 
             .courses-container {
-                
+
             }
 
             .course {
@@ -123,7 +130,7 @@
                 transform: translateX(-10px);
             }
 
-            .social-panel { 
+            .social-panel {
                 background-color: #fff;
                 border-radius: 16px;
                 box-shadow: 0 16px 31px -17px rgba(0,31,97,0.6);
@@ -134,7 +141,7 @@
                 align-items: center;
                 font-family: 'Muli';
                 position: relative;
-                height: 169px;  
+                height: 169px;
                 width: 370px;
                 max-width: calc(100% - 10px);
             }
@@ -180,9 +187,9 @@
 
             .social-panel h4 {
                 margin: 20px 0;
-                color: #97A5CE; 
-                font-family: 'Muli';    
-                font-size: 14px;    
+                color: #97A5CE;
+                font-family: 'Muli';
+                font-size: 14px;
                 line-height: 18px;
                 text-transform: uppercase;
             }
@@ -265,7 +272,7 @@
                 .social-panel-container.visible {
                     transform: translateX(0px);
                 }
-                
+
                 .floating-btn {
                     right: 10px;
                 }
@@ -292,7 +299,9 @@
         </div>
         <form class="form-inline global-search">
             <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
-                C
+
+              <img src="logo.jpg" alt="logo" class="center">
+                <!-- C
                 <span style="color: #EA4335; ">O</span>
                 <span style="color: #FBBC05; ">U</span>
                 R
@@ -303,11 +312,11 @@
                 N
                 <span style="color: #34A853; ">D</span>
                 <span style="color: #EA4335; ">E</span>
-                <span style="color: #EA4335; ">R</span>
+                <span style="color: #EA4335; ">R</span> -->
             </h1>
-            
+
             <br><br>
-            
+
             <div class="form-group">
                 <input id="input" type="text" name="search" class="form-control" placeholder="Enter a topic you want to learn">
             </div>
@@ -316,7 +325,7 @@
         <form class="form-inline global-search">
         {% if data %}
             <h1>{{output_message}}</h1>
-            {% for d in data %}  
+            {% for d in data %}
                 <br>
 <!--                 <p>{{d}}</p> -->
             <div class="courses-container">
