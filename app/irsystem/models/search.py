@@ -20,7 +20,6 @@ class LemmaTokenizer(object):
         return [self.wnl.lemmatize(t) for t in word_tokenize(articles) if t not in stopwords and t.isalnum()]
 
 
-data = []
 courses = {}
 course_names = []
 docs = None
@@ -31,11 +30,12 @@ tfidf_vectorizer_tags = None
 
 
 def initialize():
-	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
+	global courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
 
 	with open('../../../udemy_coursera_edx.csv') as f:
 		data = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
 
+	data = []
 	index = 0
 	sentiment = SentimentIntensityAnalyzer()
 
@@ -74,6 +74,10 @@ def initialize():
 			if courses[i["course_name"]]["course_enrollments"] != "":
 				current = float(courses[i["course_name"]]["course_enrollments"])
 			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
+
+		i.clear()
+	data = []
+
 
 	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
 	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
