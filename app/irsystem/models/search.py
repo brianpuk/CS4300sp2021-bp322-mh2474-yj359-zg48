@@ -3,7 +3,7 @@ from nltk.tokenize import TreebankWordTokenizer
 from nltk import word_tokenize          
 from nltk.stem import WordNetLemmatizer 
 from nltk.corpus import stopwords
-#from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk.sentiment import SentimentIntensityAnalyzer
 from sklearn.feature_extraction.text import TfidfVectorizer,strip_accents_unicode
 from sklearn.metrics.pairwise import cosine_similarity
 #import sys
@@ -52,12 +52,12 @@ def initialize():
 		del courses[i]["user_rating"]
 		del courses[i]["review"]
 
-	#tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
+	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
 	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
 	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
 	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
 
-	#tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
+	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
 	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
 	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
 	#print(courses[course_names[0]])
@@ -77,7 +77,7 @@ def proccess(start):
 	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
 	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
 
-	#sentiment = SentimentIntensityAnalyzer()
+	sentiment = SentimentIntensityAnalyzer()
 	index = start
 	for i in data:
 		if i["course_name"] not in courses:
@@ -97,7 +97,7 @@ def proccess(start):
 
 					course_names.append(i["course_name"])
 					index += 1
-			'''elif i["course_partner"] != "" and i["course_partner"] != courses[i["course_name"]]["course_partner"]:
+			elif i["course_partner"] != "" and i["course_partner"] != courses[i["course_name"]]["course_partner"]:
 				i["course_name"] = i["course_name"] + " " + i["course_partner"]
 				if i["course_name"] not in courses: 
 					courses[i["course_name"]] = i
@@ -105,7 +105,7 @@ def proccess(start):
 					courses[i["course_name"]]["tags"] = "".join(courses[i["course_name"]]["tags"])
 
 					course_names.append(i["course_name"])
-					index += 1'''
+					index += 1
 			#else:
 				#print(i["course_name"])
 				#print(i["link"],courses[i["course_name"]]["link"])
@@ -113,7 +113,7 @@ def proccess(start):
 			current = 0
 			if courses[i["course_name"]]["course_enrollments"] != "":
 				current = float(courses[i["course_name"]]["course_enrollments"])
-			#courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
+			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
 	
 	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
 	data = []
