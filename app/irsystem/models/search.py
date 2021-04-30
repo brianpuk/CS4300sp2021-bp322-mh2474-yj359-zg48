@@ -32,46 +32,46 @@ tfidf_vectorizer_tags = None
 def initialize():
 	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
 
-	length = 114579
-	pieces = 3
-	start = 0
-	index = 0
-	num = 0
-	with open('../../../udemy_coursera_edx.csv') as f:
-		for row in DictReader(f, skipinitialspace=True):
-			if length/pieces * (num + 1) >= index:
-				data.append({k: v for k, v in row.items()})
-			else:
-				start = proccess(start)
-				num += 1
-				data.append({k: v for k, v in row.items()})
-			index += 1
-		proccess(start)
-
-	for i in courses:
-		del courses[i]["user_rating"]
-		del courses[i]["review"]
-
-	#tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
-	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
-	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
-	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
-
-	#tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
-	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
-	#print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
-	#print(courses[course_names[0]])
-	'''print(len(tfidf_names))
-	print(len(tfidf_names[0]))
-	print(sys.getsizeof(tfidf_names))
-	print()
-	print(len(tfidf_tags))
-	print(len(tfidf_tags[0]))
-	print(sys.getsizeof(tfidf_tags))
-	print()
-	print(sys.getsizeof(tfidf_vectorizer_names))
-	print(sys.getsizeof(tfidf_vectorizer_tags))
-	print(sys.getsizeof(courses))'''
+	# length = 114579
+	# pieces = 3
+	# start = 0
+	# index = 0
+	# num = 0
+	# with open('../../../udemy_coursera_edx.csv') as f:
+	# 	for row in DictReader(f, skipinitialspace=True):
+	# 		if length/pieces * (num + 1) >= index:
+	# 			data.append({k: v for k, v in row.items()})
+	# 		else:
+	# 			start = proccess(start)
+	# 			num += 1
+	# 			data.append({k: v for k, v in row.items()})
+	# 		index += 1
+	# 	proccess(start)
+	#
+	# for i in courses:
+	# 	del courses[i]["user_rating"]
+	# 	del courses[i]["review"]
+	#
+	# #tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
+	# #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
+	# tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
+	# #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
+	#
+	# #tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
+	# tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
+	# #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (2**10))
+	# #print(courses[course_names[0]])
+	# '''print(len(tfidf_names))
+	# print(len(tfidf_names[0]))
+	# print(sys.getsizeof(tfidf_names))
+	# print()
+	# print(len(tfidf_tags))
+	# print(len(tfidf_tags[0]))
+	# print(sys.getsizeof(tfidf_tags))
+	# print()
+	# print(sys.getsizeof(tfidf_vectorizer_names))
+	# print(sys.getsizeof(tfidf_vectorizer_tags))
+	# print(sys.getsizeof(courses))'''
 
 def proccess(start):
 	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
