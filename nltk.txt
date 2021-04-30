@@ -1,3 +1,4 @@
 stopwords
 punkt
 wordnet
+vader_lexicon
