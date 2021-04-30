@@ -22,6 +22,7 @@ class LemmaTokenizer(object):
 
 courses = {}
 course_names = []
+data = []
 docs = None
 tfidf_names= None
 tfidf_tags= None
@@ -29,16 +30,34 @@ tfidf_vectorizer_names = None
 tfidf_vectorizer_tags = None
 
 
-def initialize():
-	global courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
+def initialize(length,pieces):
+	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
 
-	data = []
-	with open('../../../udemy_coursera_edx.csv') as f:
-		data = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
-
+	start = 0
 	index = 0
-	sentiment = SentimentIntensityAnalyzer()
+	num = 0
+	with open('../../../udemy_coursera_edx.csv') as f:
+		for row in csv.DictReader(f, skipinitialspace=True):
+			if length/pieces * (num + 1) >= index:
+				data.append({k: v for k, v in row.items()})
+			else:
+				start = proccess(start)
+				num += 1
+				data.append({k: v for k, v in row.items()})
+			index += 1
+		proccess(start)
 
+	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
+	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
+
+	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
+	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
+
+def proccess(start):
+	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
+
+	sentiment = SentimentIntensityAnalyzer()
+	index = start
 	for i in data:
 		if i["course_name"] not in courses:
 			courses[i["course_name"]] = i
@@ -74,16 +93,8 @@ def initialize():
 			if courses[i["course_name"]]["course_enrollments"] != "":
 				current = float(courses[i["course_name"]]["course_enrollments"])
 			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
-
 	data = []
-
-
-	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
-	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
-
-	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
-	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
-
+	return index
 
 def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=None, level=None, num_results=10):
 	scores = None
@@ -147,4 +158,4 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 
 	return results
 
-initialize()
+initialize(114579,3)
