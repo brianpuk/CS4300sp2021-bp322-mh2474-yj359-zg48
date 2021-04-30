@@ -1,14 +1,14 @@
-import csv
+from csv import DictReader
 from nltk.tokenize import TreebankWordTokenizer
-import numpy as np
 from nltk import word_tokenize          
 from nltk.stem import WordNetLemmatizer 
 from nltk.corpus import stopwords
+from nltk.sentiment import SentimentIntensityAnalyzer
 from sklearn.feature_extraction.text import TfidfVectorizer,strip_accents_unicode
 from sklearn.metrics.pairwise import cosine_similarity
-from operator import itemgetter
 
 stopwords = stopwords.words('english')
+
 
 class LemmaTokenizer(object):
     def __init__(self):
@@ -16,43 +16,149 @@ class LemmaTokenizer(object):
     def __call__(self, articles):
         return [self.wnl.lemmatize(t) for t in word_tokenize(articles) if t not in stopwords and t.isalnum()]
 
-coursera_data = []
-coursera_courses = {}
-coursera_course_names = []
-coursera_docs = None
-tfidf= None
-tfidf_vectorizer = None
+
+courses = {}
+course_names = []
+data = []
+docs = None
+tfidf_names= None
+tfidf_tags= None
+tfidf_vectorizer_names = None
+tfidf_vectorizer_tags = None
+
 
 def initialize():
-	if tfidf != None:
+	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
+	if tfidf_tags != None:
 		return
-	global coursera_data,coursera_courses,coursera_course_names,coursera_docs,tfidf,tfidf_vectorizer
 
-	with open('coursera_data.csv') as f:
-		coursera_data = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
-
+	length = 114579
+	pieces = 3
+	start = 0
 	index = 0
-	for i in coursera_data:
-		if i["course_name"] not in coursera_courses:
-			coursera_courses[i["course_name"]] = i
-			coursera_courses[i["course_name"]]["id"] = index
-			coursera_course_names.append(i["course_name"])
+	num = 0
+	with open('coursera_data.csv') as f:
+		for row in DictReader(f, skipinitialspace=True):
+			if length/pieces * (num + 1) >= index:
+				data.append({k: v for k, v in row.items()})
+			else:
+				start = proccess(start)
+				num += 1
+				data.append({k: v for k, v in row.items()})
 			index += 1
-	tfidf_vectorizer = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
-	tfidf = tfidf_vectorizer.fit_transform([i.lower() for i in coursera_course_names]).toarray()
+		proccess(start)
+
+	for i in courses:
+		del courses[i]["user_rating"]
+		del courses[i]["review"]
+
+	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
+	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
+
+	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
+	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
+
+
+def proccess(start):
+	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
+
+	sentiment = SentimentIntensityAnalyzer()
+	index = start
+	for i in data:
+		if i["course_name"] not in courses:
+			courses[i["course_name"]] = i
+			courses[i["course_name"]]["id"] = index
+			courses[i["course_name"]]["tags"] = "".join(courses[i["course_name"]]["tags"])
+
+			course_names.append(i["course_name"])
+			index += 1
+		elif i["link"] != courses[i["course_name"]]["link"]:
+			if  "coursera" in courses[i["course_name"]]["link"] and ("edx" in i["link"] or "udemy" in i["link"]):
+				i["course_name"] = i["course_name"] + " Coursera"
+				if i["course_name"] not in courses: 
+					courses[i["course_name"]] = i
+					courses[i["course_name"]]["id"] = index
+					courses[i["course_name"]]["tags"] = "".join(courses[i["course_name"]]["tags"])
+
+					course_names.append(i["course_name"])
+					index += 1
+			elif i["course_partner"] != "" and i["course_partner"] != courses[i["course_name"]]["course_partner"]:
+				i["course_name"] = i["course_name"] + " " + i["course_partner"]
+				if i["course_name"] not in courses: 
+					courses[i["course_name"]] = i
+					courses[i["course_name"]]["id"] = index
+					courses[i["course_name"]]["tags"] = "".join(courses[i["course_name"]]["tags"])
+
+					course_names.append(i["course_name"])
+					index += 1
+		else:
+			current = 0
+			if courses[i["course_name"]]["course_enrollments"] != "":
+				current = float(courses[i["course_name"]]["course_enrollments"])
+			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
 	
-def find_courses(query, min_rating=1.0, level=None, num_results=10):
-	a = tfidf_vectorizer.build_analyzer()
-	query_tfidf = tfidf_vectorizer.transform([query])
-	cosineSimilarities = cosine_similarity(query_tfidf, tfidf).flatten()
-	
-	sorted_docs = cosineSimilarities.argsort()[::-1]
+
+	data = []
+	return index
+
+def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=None, level=None, num_results=10):
+	scores = None
+
+	if query_names != None:
+		a = tfidf_vectorizer_names.build_analyzer()
+		query_name_tfidf = tfidf_vectorizer_names.transform([query_names])
+		cosine_similarities_names = cosine_similarity(query_name_tfidf, tfidf_names).flatten()
+
+		if query_tags == None:
+			scores = cosine_similarities_names
+		else:
+			b = tfidf_vectorizer_tags.build_analyzer()
+			query_tags_tfidf = tfidf_vectorizer_tags.transform([query_tags])
+			cosine_similarities_tags = cosine_similarity(query_tags_tfidf, tfidf_tags).flatten()
+
+			scores = cosine_similarities_tags + cosine_similarities_names * 2
+	elif query_tags != None:
+		b = tfidf_vectorizer_tags.build_analyzer()
+		query_tags_tfidf = tfidf_vectorizer_tags.transform([query_tags])
+		cosine_similarities_tags = cosine_similarity(query_tags_tfidf, tfidf_tags).flatten()
+
+		scores = cosine_similarities_tags
+	else:
+		return None
+
+
+	for i in range(len(course_names)):
+		if courses[course_names[i]]["course_rating"] != "none" and courses[course_names[i]]["course_rating"] != "":
+			scores[i] *= float(courses[course_names[i]]["course_rating"])
+		else:
+			scores[i] *= 4 #Placeholder
+
+	sorted_docs = scores.argsort()[::-1]
 	results = []
+
+
+	best_score = scores[sorted_docs[0]]
 	for i in sorted_docs:
-		name = coursera_course_names[i]
-		if (coursera_courses[name]["course_rating"] == "None" or float(coursera_courses[name]["course_rating"]) >= min_rating) and (coursera_courses[name]["course_level"] == "None" or level == None or coursera_courses[name]["course_level"] == level):
-			results.append(coursera_courses[name])
+		name = course_names[i]
+		if num_results <= 0:
+			if scores[i] < .8 * best_score: #Placeholder
+				break
+		if (courses[name]["course_rating"] == "none" or courses[name]["course_rating"] == "" or float(courses[name]["course_rating"]) >= min_rating) and (courses[name]["course_level"] == "none" or courses[name]["course_level"] == "" or level == None or courses[name]["course_level"] == level) and (courses[name]["price"] == "" or max_price == None or float(courses[name]["price"])  <= max_price):
+			results.append(courses[name])
 			num_results -= 1
-		if num_results == 0:
-			break
-	return sorted(results, key=itemgetter('course_rating'), reverse=True)
+
+	while num_results < 0:
+		min_enrollment = -1
+		for i in results:
+			if i["course_enrollments"] == "":
+				i["course_enrollments"] = "0"
+			if min_enrollment == -1 or float(i["course_enrollments"]) < min_enrollment:
+				min_enrollment = float(i["course_enrollments"])
+
+		for i in reversed(range(len(results))):
+			if float(results[i]["course_enrollments"]) == min_enrollment:
+				del results[i]
+				num_results += 1
+				break
+
+	return results
