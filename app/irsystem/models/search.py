@@ -24,6 +24,8 @@ tfidf= None
 tfidf_vectorizer = None
 
 def initialize():
+	if tfidf != None:
+		return
 	global coursera_data,coursera_courses,coursera_course_names,coursera_docs,tfidf,tfidf_vectorizer
 
 	with open('coursera_data.csv') as f:
@@ -36,7 +38,7 @@ def initialize():
 			coursera_courses[i["course_name"]]["id"] = index
 			coursera_course_names.append(i["course_name"])
 			index += 1
-	tfidf_vectorizer = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.5,min_df = 1,use_idf=True)
+	tfidf_vectorizer = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
 	tfidf = tfidf_vectorizer.fit_transform([i.lower() for i in coursera_course_names]).toarray()
 	
 def find_courses(query, min_rating=1.0, level=None, num_results=10):
