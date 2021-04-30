@@ -9,6 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer,strip_accents_unicod
 from sklearn.metrics.pairwise import cosine_similarity
 from operator import itemgetter
 import nltk
+import sys
 
 stopwords = stopwords.words('english')
 
@@ -47,11 +48,21 @@ def initialize(length,pieces):
 			index += 1
 		proccess(start)
 
-	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
+	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.05,min_df = 20,use_idf=True)
 	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
 
 	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
 	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
+	'''print(len(tfidf_names))
+	print(len(tfidf_names[0]))
+	print(sys.getsizeof(tfidf_names))
+	print()
+	print(len(tfidf_tags))
+	print(len(tfidf_tags[0]))
+	print(sys.getsizeof(tfidf_tags))
+	print()
+	print(sys.getsizeof(tfidf_vectorizer_names))
+	print(sys.getsizeof(tfidf_vectorizer_tags))'''
 
 def proccess(start):
 	global data,courses,course_names,docs,tfidf_names,tfidf_tags,tfidf_vectorizer_names,tfidf_vectorizer_tags
