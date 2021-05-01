@@ -131,7 +131,7 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 		if courses[course_names[i]]["course_rating"] != "none" and courses[course_names[i]]["course_rating"] != "":
 			scores[i] *= float(courses[course_names[i]]["course_rating"])
 		else:
-			scores[i] *= 4.5 #Placeholder
+			scores[i] *= 4 #Placeholder
 
 	sorted_docs = scores.argsort()[::-1]
 	results = []
