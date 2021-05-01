@@ -357,6 +357,68 @@
                 text-decoration: none;
             }
 
+            .wood-text {
+                background: url('/static/gradient_1.jpg');
+                background-size: cover;
+                position: relative;
+                font-size: 60px;
+                text-transform: uppercase;
+                font-family: 'Rancho', cursive;
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                &:after {
+                  $stroke-width: $extra-large * 0.05;
+                  content: $random-text;
+                  position: absolute;
+                  -webkit-text-stroke-width: $stroke-width;
+                  -webkit-text-stroke-color: rgba(black, 0.6);
+                  left: 2px;
+                  top: 2px
+                }
+              }
+
+              .wood-text-second {
+                background: url('https://i.imgur.com/OUyfQnt.jpg');
+                background-size: cover;
+                position: relative;
+                font-size: 20px;
+                text-transform: uppercase;
+                font-family:Futura;
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                &:after {
+                  $stroke-width: $extra-large * 0.05;
+                  content: $random-text;
+                  position: absolute;
+                  -webkit-text-stroke-width: $stroke-width;
+                  -webkit-text-stroke-color: rgba(black, 0.6);
+                  left: 2px;
+                  top: 2px
+                }
+              }
+
+              .result {
+                background: url('/static/gradient_2.jpg');
+                background-size: cover;
+                position: relative;
+                font-size: 30px;
+                font-family: Verdana;
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                &:after {
+                  $stroke-width: $extra-large * 0.05;
+                  content: $random-text;
+                  position: absolute;
+                  -webkit-text-stroke-width: $stroke-width;
+                  -webkit-text-stroke-color: rgba(black, 0.6);
+                  left: 2px;
+                  top: 2px
+                }
+              }
+
             @media screen and (max-width: 480px) {
 
                 .social-panel-container.visible {
@@ -383,15 +445,15 @@
         </script>
     </head>
     <body>
-        <div class="topcorner">
+<!--         <div class="topcorner">
             <p>Project Name: {{ name }}</p>
             <p>Student Name: ({{ netid }})</p>
-        </div>
+        </div> -->
 
         <form class="form-inline global-search">
-<!--             <img src="course.jpg" alt="Courses"> -->
+            <img src="/static/course.jpg" alt="Courses" width="150" height="100">
 
-            <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
+<!--             <h1 style="font-size: 55px; font-family:Futura; color: #4285F4">
 
 
               C
@@ -406,7 +468,13 @@
                 <span style="color: #34A853; ">D</span>
                 <span style="color: #EA4335; ">E</span>
                 <span style="color: #EA4335; ">R</span>
-            </h1>
+            </h1> -->
+
+            <div class='wood-text'>COURSE FINDER</div>
+
+            <br><br>
+
+            <div class='wood-text-second'>Online Course Recommendation Engine</div>
 
             <br><br>
 
@@ -417,7 +485,7 @@
         </form>
         <form class="form-inline global-search">
         {% if data %}
-            <h1>{{output_message}}</h1>
+            <div class='result'>{{output_message}}</div>
             {% for d in data %}
                 <br>
 <!--                 <p>{{d}}</p> -->
