@@ -141,7 +141,7 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 	for i in sorted_docs:
 		name = course_names[i]
 		if num_results <= 0:
-			if scores[i] < .8 * best_score: #Placeholder
+			if scores[i] < .8 * best_score and num_results > -30: #Placeholder
 				break
 		if (courses[name]["course_rating"] == "none" or courses[name]["course_rating"] == "" or float(courses[name]["course_rating"]) >= min_rating) and (courses[name]["course_level"] == "none" or courses[name]["course_level"] == "" or level == None or courses[name]["course_level"] == level) and (courses[name]["price"] == "" or max_price == None or float(courses[name]["price"])  <= max_price):
 			results.append(courses[name])
