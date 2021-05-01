@@ -37,7 +37,7 @@ def initialize():
 	start = 0
 	index = 0
 	num = 0
-	with open('../../../coursera_data.csv') as f:
+	with open('coursera_data.csv') as f:
 		for row in DictReader(f, skipinitialspace=True):
 			if length/pieces * (num + 1) >= index:
 				data.append({k: v for k, v in row.items()})
