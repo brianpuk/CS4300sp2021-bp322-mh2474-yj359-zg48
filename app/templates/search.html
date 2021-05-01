@@ -40,7 +40,7 @@
                 margin: 10px 0;
             }
 
-            .course-preview {
+            .course-preview-c {
                 background-color: #2A265F;
                 color: #fff;
                 padding: 30px;
@@ -48,7 +48,41 @@
                 max-width: 400px;
             }
 
-            .course-preview h5 {
+            .course-preview-c h5 {
+                color: #fff;
+                display: inline-block;
+                font-size: 12px;
+                opacity: 0.6;
+                margin-top: 30px;
+                text-decoration: none;
+            }
+
+            .course-preview-e {
+                background-color: #46a641;
+                color: #fff;
+                padding: 30px;
+                min-width: 400px;
+                max-width: 400px;
+            }
+
+            .course-preview-e h5 {
+                color: #fff;
+                display: inline-block;
+                font-size: 12px;
+                opacity: 0.6;
+                margin-top: 30px;
+                text-decoration: none;
+            }
+
+            .course-preview-u {
+                background-color: #e7ed2b;
+                color: #fff;
+                padding: 30px;
+                min-width: 400px;
+                max-width: 400px;
+            }
+
+            .course-preview-u h5 {
                 color: #fff;
                 display: inline-block;
                 font-size: 12px;
@@ -71,16 +105,52 @@
                 width: 150px;
             }
 
-            .progress {
+            .progress-c {
                 background-color: #ddd;
                 border-radius: 3px;
                 height: 5px;
                 width: 100%;
             }
 
-            .progress::after {
+            .progress-c::after {
                 border-radius: 3px;
                 background-color: #2A265F;
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 5px;
+                width: 66%;
+            }
+
+            .progress-e {
+                background-color: #ddd;
+                border-radius: 3px;
+                height: 5px;
+                width: 100%;
+            }
+
+            .progress-e::after {
+                border-radius: 3px;
+                background-color: #46a641;
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 5px;
+                width: 66%;
+            }
+
+            .progress-u {
+                background-color: #ddd;
+                border-radius: 3px;
+                height: 5px;
+                width: 100%;
+            }
+
+            .progress-u::after {
+                border-radius: 3px;
+                background-color: #e7ed2b;
                 content: '';
                 position: absolute;
                 top: 0;
@@ -95,8 +165,36 @@
                 letter-spacing: 1px;
             }
 
-            .butn {
+            .butn-c {
                 background-color: #2A265F;
+                border: 0;
+                border-radius: 50px;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+                color: #fff;
+                font-size: 16px;
+                padding: 12px 25px;
+                position: absolute;
+                bottom: 30px;
+                right: 30px;
+                letter-spacing: 1px;
+            }
+
+            .butn-e {
+                background-color: #46a641;
+                border: 0;
+                border-radius: 50px;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+                color: #fff;
+                font-size: 16px;
+                padding: 12px 25px;
+                position: absolute;
+                bottom: 30px;
+                right: 30px;
+                letter-spacing: 1px;
+            }
+
+            .butn-u {
+                background-color: #e7ed2b;
                 border: 0;
                 border-radius: 50px;
                 box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
@@ -322,16 +420,17 @@
             {% for d in data %}
                 <br>
 <!--                 <p>{{d}}</p> -->
+        {% if d['link'][8] == "c"%}
             <div class="courses-container">
             <div class="course">
-                <div class="course-preview">
-                    <h6>Course</h6>
+                <div class="course-preview-c">
+                    <h6>Coursera Course</h6>
                     <h2>{{d['course_name']}}</h2>
                     <h5>Level: {{d['course_level']}}</h5>
                 </div>
                 <div class="course-info">
                     <div class="progress-container">
-                        <div class="progress"></div>
+                        <div class="progress-c"></div>
                         <span class="progress-text">
                             Rating: {{d['course_rating']}}/5
                         </span>
@@ -339,11 +438,57 @@
                     <br>
                     <h4>Tags: {{d['tags'][1:-1]}}</h4>
                     <br>
-                    <a href="{{d['link']}}" target="_blank"><div class="butn">Try it out!</div></a>
+                    <a href="{{d['link']}}" target="_blank"><div class="butn-c">Try it out!</div></a>
                 </div>
             </div>
             </div>
+        {% elif d['link'][12] == "e"%}
+            <div class="courses-container">
+            <div class="course">
+                <div class="course-preview-e">
+                    <h6>Edx Course</h6>
+                    <h2>{{d['course_name']}}</h2>
+                    <h5>Level: {{d['course_level']}}</h5>
+                </div>
+                <div class="course-info">
+                    <div class="progress-container">
+                        <div class="progress-e"></div>
+                        <span class="progress-text">
+                            Enrollments: {{d['course_enrollments']}}
+                        </span>
+                    </div>
+                    <br>
+                    <h4>Partner: {{d['course_partner']}}</h4>
+                    <br>
+                    <a href="{{d['link']}}" target="_blank"><div class="butn-e">Try it out!</div></a>
+                </div>
+            </div>
+            </div>
+        {% else %}
+            <div class="courses-container">
+            <div class="course">
+                <div class="course-preview-u">
+                    <h6>Udemy Course</h6>
+                    <h2>{{d['course_name']}}</h2>
+                    <h5>Level: {{d['course_level']}}</h5>
+                </div>
+                <div class="course-info">
+                    <div class="progress-container">
+                        <div class="progress-u"></div>
+                        <span class="progress-text">
+                            Rating: {{d['course_rating']}}/5
+                        </span>
+                    </div>
+                    <br>
+                    <h4>Tags: {{d['tags'][1:-1]}}</h4>
+                    <br>
+                    <a href="{{d['link']}}" target="_blank"><div class="butn-u">Try it out!</div></a>
+                </div>
+            </div>
+            </div>
+        {% endif %}
             {% endfor %}
+        }
         {% endif %}
         </form>
     </body>
