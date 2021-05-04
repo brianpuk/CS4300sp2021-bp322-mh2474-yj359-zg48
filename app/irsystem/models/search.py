@@ -52,8 +52,8 @@ def initialize():
 		del courses[i]["user_rating"]
 		del courses[i]["review"]
 
-	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 15,use_idf=True)
-	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 10,use_idf=True)
+	tfidf_vectorizer_names = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.1,min_df = 5,use_idf=True)
+	tfidf_vectorizer_tags = TfidfVectorizer(tokenizer=LemmaTokenizer(), strip_accents = 'unicode',lowercase = True,max_df = 0.3,min_df = 5,use_idf=True)
 
 	tfidf_names = tfidf_vectorizer_names.fit_transform([i.lower() for i in course_names]).toarray()
 	tfidf_tags = tfidf_vectorizer_tags.fit_transform([courses[i]["tags"].lower() for i in course_names]).toarray()
@@ -131,7 +131,7 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 		if courses[course_names[i]]["course_rating"] != "none" and courses[course_names[i]]["course_rating"] != "":
 			scores[i] *= float(courses[course_names[i]]["course_rating"])
 		else:
-			scores[i] *= 4.5 #Placeholder
+			scores[i] *= 4 #Placeholder
 
 	sorted_docs = scores.argsort()[::-1]
 	results = []
