@@ -103,6 +103,8 @@ def proccess(start):
 
 def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=None, level=None, num_results=10):
 	scores = None
+	if level == "All Levels":
+		level = None
 
 	if query_names != None:
 		a = tfidf_vectorizer_names.build_analyzer()
@@ -138,6 +140,8 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 
 
 	best_score = scores[sorted_docs[0]]
+	if best_score == 0:
+		return results, False
 	for i in sorted_docs:
 		name = course_names[i]
 		if num_results <= 0:
@@ -160,5 +164,4 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 				del results[i]
 				num_results += 1
 				break
-
-	return results
+	return results, (len(results) > 0)
