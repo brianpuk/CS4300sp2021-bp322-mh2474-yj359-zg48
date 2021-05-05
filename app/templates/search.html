@@ -852,6 +852,10 @@
                 }
               }
 
+              .partner {
+                margin-bottom: 50px;
+              }
+
             @media screen and (max-width: 480px) {
 
                 .social-panel-container.visible {
@@ -996,7 +1000,7 @@
                         </span>
                     </div>
                     <br>
-                    <h4>Tags: {{d['tags'][1:-1]}}</h4>
+                    <div class="partner"><h4>Tags: {{d['tags'][1:-1]}}</h4></div>
                     <br>
                     <a href="{{d['link']}}" target="_blank"><div class="butn-c">Try it out!</div></a>
                 </div>
@@ -1020,7 +1024,7 @@
                         </span>
                     </div>
                     <br>
-                    <h4>Partner: {{d['course_partner']}}</h4>
+                    <div class="partner"><h4>Partner: {{d['course_partner']}}</h4></div>
                     <br>
                     <a href="{{d['link']}}" target="_blank"><div class="butn-e">Try it out!</div></a>
                 </div>
@@ -1078,7 +1082,6 @@
             </div>
         {% endif %}
             {% endfor %}
-        }
         {% else %}
         <div class='result'>Oops, no results found. Try something else!</div>
         {% endif %}
