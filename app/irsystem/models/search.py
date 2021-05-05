@@ -138,6 +138,8 @@ def find_courses(query_names=None, query_tags=None, min_rating=1.0, max_price=No
 
 
 	best_score = scores[sorted_docs[0]]
+	if best_score == 0:
+		return results
 	for i in sorted_docs:
 		name = course_names[i]
 		if num_results <= 0:
