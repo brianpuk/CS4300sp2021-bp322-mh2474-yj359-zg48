@@ -95,7 +95,7 @@ def proccess(start):
 			current = 0
 			if courses[i["course_name"]]["course_enrollments"] != "":
 				current = float(courses[i["course_name"]]["course_enrollments"])
-			#courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
+			courses[i["course_name"]]["course_enrollments"] = str(current + 300*sentiment.polarity_scores(i["review"])["compound"])
 	
 
 	data = []
